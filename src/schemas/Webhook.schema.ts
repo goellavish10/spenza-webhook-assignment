@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsOptional } from 'class-validator';
+import { Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Webhook {
@@ -8,6 +9,9 @@ export class Webhook {
 
   @Prop({ required: true })
   callbackUrl: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  user: string;
 
   @Prop({ default: Date.now })
   @IsOptional()

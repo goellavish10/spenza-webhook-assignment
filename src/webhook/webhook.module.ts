@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { WebhookController } from './webhook.controller';
 import { WebhookService } from './webhook.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,6 +10,7 @@ import {
 } from 'src/schemas/WebhookEvent.schema';
 import { HttpModule } from '@nestjs/axios';
 import { WebhookProcessor } from './webhook.processor';
+import { JwtMiddleware } from 'src/middleware/jwt.middleware';
 
 @Module({
   imports: [
@@ -34,4 +35,8 @@ import { WebhookProcessor } from './webhook.processor';
   controllers: [WebhookController],
   providers: [WebhookService, WebhookProcessor],
 })
-export class WebhookModule {}
+export class WebhookModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMiddleware).forRoutes(WebhookController);
+  }
+}

@@ -13,6 +13,8 @@ export class UsersService {
   }
 
   create(user: SignUpUserDTO) {
-    return new this.userModel(user);
+    const newUser = new this.userModel(user);
+
+    return newUser.save();
   }
 }

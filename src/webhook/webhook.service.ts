@@ -23,24 +23,43 @@ export class WebhookService {
   ) {}
 
   async subscribeWebhook(
+    user: any,
     subscribeWebhookDto: SubscribeWebhookDto,
   ): Promise<Webhook> {
-    const createdWebhook = new this.webhookModel(subscribeWebhookDto);
+    console.log(user);
+    const createdWebhook = new this.webhookModel({
+      ...subscribeWebhookDto,
+      user: user.id,
+    });
     return createdWebhook.save();
   }
 
-  async getAllWebhooks(): Promise<Webhook[]> {
-    return this.webhookModel.find().exec();
+  async getAllWebhooks(user: any): Promise<Webhook[]> {
+    return this.webhookModel.find({ user: user.id }).exec();
   }
 
-  async handleWebhookEvent(webhookEventDto: WebhookEventDto): Promise<void> {
-    const createdEvent = new this.webhookEventModel(webhookEventDto);
-    await createdEvent.save();
+  async getAllWebhookEvents(user: any): Promise<WebhookEvent[]> {
+    return this.webhookEventModel
+      .find({ user: user.id })
+      .populate('webhook')
+      .select('-user -_id -__v')
+      .exec();
+  }
 
+  async handleWebhookEvent(
+    user: any,
+    webhookEventDto: WebhookEventDto,
+  ): Promise<void> {
     const webhooks = await this.webhookModel
       .find({ source: webhookEventDto.source })
       .exec();
     for (const webhook of webhooks) {
+      const createdEvent = new this.webhookEventModel({
+        ...webhookEventDto,
+        webhook: webhook.id,
+        user: user.id,
+      });
+      await createdEvent.save();
       await this.webhookQueue.add('process-webhook', {
         callbackUrl: webhook.callbackUrl,
         payload: webhookEventDto.payload,

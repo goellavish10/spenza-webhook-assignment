@@ -24,6 +24,7 @@ export class AuthService {
     }
     const payload = {
       username: loginUserDTO.username,
+      id: user.id,
     };
     return {
       access_token: this.jwtService.sign(payload),
@@ -31,6 +32,7 @@ export class AuthService {
   }
 
   async signup(signUpUserDTO: SignUpUserDTO) {
+    console.log(signUpUserDTO);
     const userExists = await this.usersService.findOneByUserName(
       signUpUserDTO.username,
     );
@@ -39,10 +41,11 @@ export class AuthService {
     }
     const hashedPassword = await bcrypt.hash(signUpUserDTO.password, 10);
     signUpUserDTO.password = hashedPassword;
-    this.usersService.create(signUpUserDTO);
+    const user = await this.usersService.create(signUpUserDTO);
     return {
       access_token: this.jwtService.sign({
         username: signUpUserDTO.username,
+        id: user.id,
       }),
     };
   }

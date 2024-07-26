@@ -19,10 +19,20 @@ async function sendWebhook() {
   const payload = generateRandomPayload();
 
   try {
-    const response = await axios.post(WEBHOOK_URL, {
-      source,
-      payload,
-    });
+    const response = await axios.post(
+      WEBHOOK_URL,
+      {
+        source,
+        payload,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxhdmlnMTAiLCJpZCI6IjY2YTQxZmM4NDUzMDIwOGIyYTEwOWViNyIsImlhdCI6MTcyMjAzMzUyOSwiZXhwIjoxNzIyMTE5OTI5fQ.fLQ0Wnhwyw3B2gNLlAM749yaiuIingmEpacSUC0HZDQ',
+        },
+      },
+    );
     console.log(`Webhook sent successfully: ${response.status}`);
   } catch (error) {
     console.error(
