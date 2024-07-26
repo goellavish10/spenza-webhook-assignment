@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const WEBHOOK_URL = 'http://localhost:3000/webhooks/event';
 const SOURCES = ['src-1'];
+const jwt = '';
 
 function generateRandomPayload() {
   return {
@@ -28,8 +29,7 @@ async function sendWebhook() {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxhdmlnMTAiLCJpZCI6IjY2YTQxZmM4NDUzMDIwOGIyYTEwOWViNyIsImlhdCI6MTcyMjAzMzUyOSwiZXhwIjoxNzIyMTE5OTI5fQ.fLQ0Wnhwyw3B2gNLlAM749yaiuIingmEpacSUC0HZDQ',
+          Authorization: `Bearer ${jwt}`,
         },
       },
     );
