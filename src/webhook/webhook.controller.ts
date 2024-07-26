@@ -51,7 +51,11 @@ export class WebhookController {
   }
 
   @Delete(':id')
-  async cancelSubscription(@Param('id') id: string): Promise<Webhook> {
-    return this.webhookService.cancelSubscription(id);
+  async cancelSubscription(
+    @Req() req: CustomRequest,
+    @Param('id') id: string,
+  ): Promise<Webhook> {
+    const user = req.user;
+    return this.webhookService.cancelSubscription(user, id);
   }
 }

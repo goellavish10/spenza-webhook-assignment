@@ -95,8 +95,9 @@ export class WebhookService {
     }
   }
 
-  async cancelSubscription(id: string): Promise<Webhook> {
+  async cancelSubscription(user: any, id: string): Promise<Webhook> {
     const deletedWebhook = await this.webhookModel.findByIdAndDelete(id).exec();
+    await this.webhookEventModel.deleteMany({ webhook: id }).exec();
     if (!deletedWebhook) {
       throw new NotFoundException(
         `Webhook subscription with ID "${id}" not found`,
