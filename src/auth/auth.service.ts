@@ -38,10 +38,8 @@ export class AuthService {
       throw new HttpException('User already exists', 409);
     }
     const hashedPassword = await bcrypt.hash(signUpUserDTO.password, 10);
-    await this.usersService.create({
-      username: signUpUserDTO.username,
-      password: hashedPassword,
-    });
+    signUpUserDTO.password = hashedPassword;
+    this.usersService.create(signUpUserDTO);
     return {
       access_token: this.jwtService.sign({
         username: signUpUserDTO.username,

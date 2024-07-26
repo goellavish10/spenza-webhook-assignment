@@ -2,12 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsOptional } from 'class-validator';
 
 @Schema({ timestamps: true })
-export class User {
-  @Prop({ unique: true, required: true })
-  username: string;
-
+export class WebhookEvent {
   @Prop({ required: true })
-  password: string;
+  source: string;
+
+  @Prop({ type: Object, required: true })
+  payload: Record<string, any>;
 
   @Prop({ default: Date.now })
   @IsOptional()
@@ -18,4 +18,4 @@ export class User {
   updatedAt?: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const WebhookEventSchema = SchemaFactory.createForClass(WebhookEvent);
