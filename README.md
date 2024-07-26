@@ -1,38 +1,21 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Spenza Webhook Assignment
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This NestJS Application performs the role of subscribing to client webhooks and listening for webhook events from different sources. This application is the basic implementation of it and can be modified in several different ways to make it more modular, secure and scalable.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Environment Variables
 
-## Description
+To run this project, you will need to add the following environment variables to your .env file in the root directory. Refer to the .env.example in the root of the project
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+`JWT_SECRET`
+`MONGODB_URI`
 
-## Installation
+## Installation and Local Setup
+
+After setting up the .env file by referencing the `.env.example` file use the following set of commands to setup the project:
 
 ```bash
 $ yarn install
 ```
-
-## Running the app
 
 ```bash
 # development
@@ -45,29 +28,101 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-## Test
+## API Reference
 
-```bash
-# unit tests
-$ yarn run test
+#### Login Route
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```http
+  POST /auth/login
 ```
 
-## Support
+Register new user
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+| Parameter  | Type     | Description |
+| :--------- | :------- | :---------- |
+| `username` | `string` |             |
+| `password` | `string` |             |
 
-## Stay in touch
+#### Signup Route
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```http
+  POST /auth/register
+```
 
-## License
+| Parameter  | Type     | Description |
+| :--------- | :------- | :---------- |
+| `username` | `string` |             |
+| `password` | `string` |             |
 
-Nest is [MIT licensed](LICENSE).
+#### Webhook Subscribe Route
+
+```http
+  POST /webhooks/subscribe
+```
+
+| Header          | Type                 | Description                 |
+| :-------------- | :------------------- | :-------------------------- |
+| `Authorization` | `Bearer <JWT_TOKEN>` | Get jwt from login endpoint |
+
+| Parameter     | Type     | Description |
+| :------------ | :------- | :---------- |
+| `source`      | `string` |             |
+| `callbackUrl` | `string` |             |
+
+```http
+  GET /webhooks
+```
+
+Get all webhooks subscribed for a particular user
+
+| Header          | Type                 | Description                 |
+| :-------------- | :------------------- | :-------------------------- |
+| `Authorization` | `Bearer <JWT_TOKEN>` | Get jwt from login endpoint |
+
+```http
+  GET /webhooks/events
+```
+
+Get all webhook events for a particular user
+
+| Header          | Type                 | Description                 |
+| :-------------- | :------------------- | :-------------------------- |
+| `Authorization` | `Bearer <JWT_TOKEN>` | Get jwt from login endpoint |
+
+```http
+  DELETE /webhooks/:id
+```
+
+Delete/Cancel subscribed webhook for the user using the ObjectId of that webhook and ll the assosciated webhook events will also be deleted.
+
+| Header          | Type                 | Description                 |
+| :-------------- | :------------------- | :-------------------------- |
+| `Authorization` | `Bearer <JWT_TOKEN>` | Get jwt from login endpoint |
+
+## Frontend
+
+The ReactJS Repository for this project can be setup for using all the functionality via simple UI.
+
+Repo Link: [Frontend Repo](https://github.com/goellavish10/spenza-webhook-frontend)
+
+## 🚀 About Me
+
+I am Lavish Goyal, recently graduated from NIT Jalandhar, developing web applications since 2020 and have > 20 months of experience building production grade software with fast-paced startups and off-shore clients.
+
+I am looking out for next opportunity as a full time software developer.
+
+Here are brief accomplishments at my ex organisations:
+
+1. Developed a product from scratch, 0-100, achieving more than 50k visits per week, on peak days reaching a 25k requests per minute. I developed a real-time analytics dashboard and loyalty program for the product as well which has been working in sync perfectly. [here](https://bookings.atccouriers.com.au/v2/quotation/step-1)
+
+2. Proposed, pitched, designed the architecture and developed the integration which led to a 25 lakh/month new revenue stream at my intern organisation.
+
+3. Worked on a system design problem in the codebase where our servers were getting bottlenecked and ensured it to deliver out > 27 million email & SMS communication over a single weekend
+
+Let's connect at:
+
+[Email](mailto:goellavish10@gmail.com)
+
+[Linkedin](https://linkedin.com/in/goellavish10)
+
+Here's my resume: [Click](https://tinyurl.com/resumelavish)
