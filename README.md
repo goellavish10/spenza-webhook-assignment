@@ -11,6 +11,8 @@ To run this project, you will need to add the following environment variables to
 
 ## Installation and Local Setup
 
+Make sure `Redis` is locally setup and running at port: `6379`, as the webhook service uses the Redis to simulate a queue communication system to manage processing of webhooks.
+
 After setting up the .env file by referencing the `.env.example` file use the following set of commands to setup the project:
 
 ```bash
@@ -27,6 +29,24 @@ $ yarn run start:dev
 # production mode
 $ yarn run start:prod
 ```
+
+## Simulating Webhook Events
+
+For simulation of webhook events, the script file `webhook-simulator.ts` can be used.
+
+Use the `/login` endpoint to obtain a JWT and replace the JWT in the script file.
+
+After replacing make sure the backend service is running on the `3000` port and you have subscribed to Webhooks with appropriate mentioned sources in the script file.
+
+Run:
+
+```bash
+$ ts-node webhook-simulator.ts
+```
+
+This will use the `SOURCES` array to randomly generate webhook events after every 5 seconds.
+
+P.S: I used [Webhook Demo Url](https://webhook.site/) website for getting a demo webhook endpoint to perform testing
 
 ## API Reference
 
